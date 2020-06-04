@@ -1,0 +1,63 @@
+#!/bin/bash
+# --- Settings
+iconSize=32                     # Icon size
+fontFamily="JetBrains Mono"     # Font family
+errorColor="#ff4400"
+ipColor="#9dffa8"
+endpointColor="#707eff"
+handshakeColor="#a164e0"
+transferColor="#f1e552"
+
+
+# ---
+# To get this id, go to the panel properties screen and on the Items tab, hover your mouse over the genmon plugin to get it's internal name.
+widgetName="genmon-$1"
+scriptDir=$(dirname $(realpath ${0}))
+
+# --- Icon click and text (for script start error case) click command - script restart
+refreshCommand="xfce4-panel --plugin-event=${widgetName}:refresh:bool:true"
+result="<click>${refreshCommand}</click>"
+result+="<txtclick>${refreshCommand}</txtclick>"
+
+# --- WG state parsing
+# Get wg state
+wgState=$(sudo wg show)
+if [[ $wgState =~ ^.*endpoint:.([0-9.]+).*handshake:.(.*)transfer:.(.*)received,.(.*).*sent.*$ ]]
+then
+    endpoint=${BASH_REMATCH[1]}
+    latestHandshake=${BASH_REMATCH[2]}
+    dn=${BASH_REMATCH[3]}
+    up=${BASH_REMATCH[4]}
+    wgString="\n<span face='${fontFamily}' foreground='${endpointColor}'>Endpoint: </span>${endpoint}"
+    wgString+="\n<span face='${fontFamily}' foreground='${handshakeColor}'>Latest handshake: </span>${latestHandshake}"
+    wgString+="\n<span face='${fontFamily}' foreground='${transferColor}'>Transfer: </span>↓${dn}, ↑${up}"
+fi
+
+# --- Checking real IP and compare with WG endpoint
+ip=$(wget -T 5 -q -O - https://ifconfig.me/ip)
+# ip=$(wget -T 5 -q -O - https://api.ipify.org)
+if [[ $? -ne 0 ]]
+then
+    iconType="na"
+    ipColor=${errorColor}
+    ipError="[Offline or network error]"
+    ip=""
+else
+    # Checking if real IP is endpoint
+    if [[ $ip == $endpoint ]]
+    then
+        iconType="on"
+    else
+        iconType="off"
+    fi
+fi
+# IP string formatting:
+ipString="<span face='${fontFamily}' foreground='${ipColor}'>IP: ${ipError}</span>${ip}"
+
+# --- Setting icon and tooltip
+result+="<img>${scriptDir}/icons/wg-${iconType}-${iconSize}.png</img>"
+result+="<tool>${ipString}${wgString}</tool>"
+
+# --- Echo result
+echo -e $result
+
