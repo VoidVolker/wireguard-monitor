@@ -1,5 +1,7 @@
 # wireguard-monitor
 
+[![Join the chat at https://gitter.im/VoidVolker/wireguard-monitor](https://badges.gitter.im/VoidVolker/wireguard-monitor.svg)](https://gitter.im/VoidVolker/wireguard-monitor?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Simple bash script for monitoring current IP and WireGuard status in Xfce tray.
 
 # Requirements
