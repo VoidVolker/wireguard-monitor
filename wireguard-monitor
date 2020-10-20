@@ -8,6 +8,7 @@ ipColor="9dffa8"
 endpointColor="707eff"
 handshakeColor="a164e0"
 transferColor="f1e552"
+refreshCommand="xfce4-panel --plugin-event=${widgetName}:refresh:bool:true"
 
 # --- vars
 scriptDir=$(dirname $(realpath ${0}))
@@ -57,6 +58,11 @@ do
         shift # past argument
         shift # past value
         ;;
+        -c|--command)
+        refreshCommand="$2"
+        shift # past argument
+        shift # past value
+        ;;
         *)    # unknown option
         # Get icon sizes list
         foundIconSizes=$(echo $(ls -1 ${scriptDir}/icons/wg-on-*.png | sed -n "s/.*\wg-on-\([0-9]*\)\.png/\1/p"))
@@ -70,6 +76,7 @@ do
         echo -e "    -n --endpoint ${endpointColor}\tEndpoint color"
         echo -e "    -h --handshake ${handshakeColor}\tHandshake color"
         echo -e "    -t --transfer ${transferColor}\tTransfer color"
+        echo -e "    -c --command \t\tCommand to execute on click"
         exit 0
         ;;
     esac
@@ -77,7 +84,6 @@ done
 
 
 # --- Icon click and text (for script start error case) click command - script restart
-refreshCommand="xfce4-panel --plugin-event=${widgetName}:refresh:bool:true"
 result="<click>${refreshCommand}</click>"
 result+="<txtclick>${refreshCommand}</txtclick>"
 
