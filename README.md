@@ -77,3 +77,4 @@ Go to genmon plugin properties and add next settings:
 | -n | --endpoint   | 707eff            | Endpoint color |
 | -h | --handshake  | a164e0            | Handshake color |
 | -t | --transfer   | f1e552            | Transfer color |
+| -c | --command    | poll vpn status   | Custom command to run on click |
