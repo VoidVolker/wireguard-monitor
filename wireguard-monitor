@@ -8,7 +8,7 @@ ipColor="9dffa8"
 endpointColor="707eff"
 handshakeColor="a164e0"
 transferColor="f1e552"
-refreshCommand="xfce4-panel --plugin-event=${widgetName}:refresh:bool:true"
+refreshCommand=""
 
 # --- vars
 scriptDir=$(dirname $(realpath ${0}))
@@ -19,7 +19,7 @@ do
     key="$1"
     case $key in
         -n|--name)
-        widgetName="genmon-$2"
+        refreshCommand="xfce4-panel --plugin-event=genmon-$2:refresh:bool:true"
         shift # past argument
         shift # past value
         ;;
